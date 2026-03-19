@@ -1,0 +1,30 @@
+# ====================================================
+# .htaccess - Configuracion de mod_rewrite para la SPA
+# Todo request que no sea un archivo o directorio real
+# se redirige a public/index.php (Front Controller).
+# ====================================================
+
+# Solo activar las reglas si mod_rewrite esta cargado
+<IfModule mod_rewrite.c>
+
+    # Habilitar reescritura
+    RewriteEngine On
+    RewriteBase /url-shortener/
+
+    # No reescribir archivos o directorios reales (css, js, imagenes)
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    # Todo lo demas pal Front Controller
+    RewriteRule ^ /url-shortener/public/index.php [QSA,L]
+
+</IfModule>
+
+# Evita que se listen los archivos del directorio si no hay index
+Options -Indexes
+
+# Protege archivos de configuracion (por si acaso config.php queda expuesto)
+<FilesMatch "^(config\.php|\.env)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
